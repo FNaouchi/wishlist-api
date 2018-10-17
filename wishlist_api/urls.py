@@ -15,13 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from items import views
 from django.conf import settings
 from django.conf.urls.static import static
+from items import views
+from rest_framework_jwt.views import obtain_jwt_token
+from api.views import (
+    ItemListView,
+    ItemDetailView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('api/login/', obtain_jwt_token, name='api-login'),
     path('items/list/', views.item_list, name='item-list'),
     path('items/detail/<int:item_id>/', views.item_detail, name='item-detail'),
     path('items/wishlist/', views.wishlist, name='wishlist' ),
@@ -30,6 +35,9 @@ urlpatterns = [
     path('user/login/', views.user_login, name='user-login'),
     path('user/logout/', views.user_logout, name='user-logout'),
 
+    path('api/list/', ItemListView.as_view(), name='api-list'),
+
+    path('api/<int:item_id>/detail/', ItemDetailView.as_view(), name='api-detail'),
     path('items/<int:item_id>/favorite/', views.item_favorite, name='item-favorite'),
 ]
 
